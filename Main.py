@@ -2,13 +2,15 @@ import timeit
 import random
 import matplotlib.pyplot as plt
 import numpy as np
+import math as m
 
 NumberOfDots = 100
 NOD = (NumberOfDots + 10) * 10
+mid = 0
 a = {}
 worstTime = {}
 medianTime = {}
-GraphStuff = np.linspace(0, 10, 101)#[i for i in range(10, NOD, 10)]
+GraphStuff = [i for i in range(10, NOD, 10)]
 StuffForLsmWorst = {}
 StuffForLsmMedian = {}
 
@@ -26,38 +28,44 @@ def fillArr(numOfEl):
     for i in range(numOfEl):
         a[i] = random.randint(0, 100000)
 
-for i in range(10, NOD, 10):
-    fillArr(i)
-    worstTime[i] = timeit.timeit(lambda:sort(a, i+1), number = 1)
-
-for i in range(10, NOD, 10):
-    fillArr(i)
-    medianTime[i] = timeit.timeit(lambda:sort(a, i+1), number = 1)
-
-A = np.vstack([GraphStuff, np.ones(len(GraphStuff))]).T
-beta, log_alpha = np.linalg.lstsq(A, np.log(list(worstTime.values())), rcond = None)[0]
-alpha = np.exp(log_alpha)
-GraphStuff = np.array(GraphStuff)
-
 plt.figure(1).set_figwidth(8)
 plt.xlabel('Количество элементов в массиве')
 plt.ylabel('Среднее время выполнения (секунды)')
 plt.title('Зависимость времени поиска элемента от размера массива\n(Худший случай)')
-plt.scatter(GraphStuff, worstTime.values(), s=5)
-plt.grid(False)
-plt.plot(GraphStuff, alpha*np.exp(beta*GraphStuff), 'r')
 
-A = np.vstack([GraphStuff, np.ones(len(GraphStuff))]).T
-beta, log_alpha = np.linalg.lstsq(A, np.log(list(medianTime.values())), rcond = None)[0]
-alpha = np.exp(log_alpha)
-GraphStuff = np.array(GraphStuff)
+for i in range(10, NOD, 10):
+    fillArr(i)
+    mid = 0
+    for j in range(30):
+        worstTime[i] = timeit.timeit(lambda:sort(a, i+1), number = 1)
+        mid += worstTime[i]
+        e = 1 / 30 * worstTime[i]
+        o = m.sqrt(1 / 29 * (worstTime[i] - e) ** 2)
+        plt.scatter(i-1, worstTime[i], s=5, c='green')
+    worstTime[i] = mid / 30
+    plt.errorbar(i, e, yerr=o, fmt='none', capsize=2)
+
+plt.scatter(GraphStuff, worstTime.values(), s=10, c='orange')
+plt.tight_layout()
+plt.grid(False)
 
 plt.figure(2).set_figwidth(8)
 plt.xlabel('Количество элементов в массиве')
 plt.ylabel('Среднее время выполнения (секунды)')
 plt.title('Зависимость времени поиска элемента от размера массива\n(Средний случай)')
-plt.scatter(GraphStuff, medianTime.values(), s=5)
+
+for i in range(10, NOD, 10):
+    fillArr(i)
+    mid = 0
+    for j in range(30):
+        medianTime[i] = timeit.timeit(lambda:sort(a, i+1), number = 1)
+        mid += medianTime[i]
+        plt.scatter(i-1, medianTime[i], s=5, c='green')
+    medianTime[i] = mid / 30
+
+plt.scatter(GraphStuff, medianTime.values(), s=5, c='orange')
+plt.tight_layout()
 plt.grid(False)
-plt.plot(GraphStuff, alpha*np.exp(beta*GraphStuff), 'r')
+
 
 plt.show()
