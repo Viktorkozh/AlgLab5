@@ -6,9 +6,8 @@ import math as m
 from scipy.optimize import curve_fit
 
 NumberOfDots = 100
-e, o = 0, 0
+e, o, mid = 0, 0, 0
 NOD = (NumberOfDots + 10) * 10
-mid = 0
 a = {}
 worstTime = {}
 GraphStuff = [i for i in range(10, NOD, 10)]
@@ -35,18 +34,17 @@ def fillArrWorst(numOfEl):
     for i in range(numOfEl):
         a[i] = 100 - i
 
-
 def quadratic_model(x, a, b, c):
     return a * x**2 + b * x + c
 
-def LSM():
+def LSM(name):
     x_data = np.array(GraphStuff)
     y_data = np.array(list(worstTime.values()))
 
     params, trash = curve_fit(quadratic_model, x_data, y_data)
 
     a_fit, b_fit, c_fit = params
-    print(f'Коэффициенты уравнения (Средний случай): a = {a_fit}, b = {b_fit}, c = {c_fit}')
+    print(f'Коэффициенты уравнения ({name}): a = {a_fit}, b = {b_fit}, c = {c_fit}')
 
     x_fit = np.linspace(min(x_data), max(x_data), 100)
     y_fit = quadratic_model(x_fit, *params)
@@ -89,7 +87,7 @@ plt.scatter(GraphStuff, worstTime.values(), s=5, c='orange')
 plt.tight_layout()
 plt.grid(False)
 
-LSM()
+LSM("Средний случай")
 
 #Case 3
 plt.figure(3).set_figwidth(8)
@@ -103,7 +101,7 @@ for i in range(10, NOD, 10):
 
 plt.scatter(GraphStuff, worstTime.values(), s=5, c='orange')
 
-LSM()
+LSM("Худший случай")
 
 plt.tight_layout()
 plt.grid(False)
