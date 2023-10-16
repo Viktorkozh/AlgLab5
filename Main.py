@@ -35,6 +35,20 @@ def fillArrWorst(numOfEl):
     for i in range(numOfEl):
         a[i] = 100 - i
 
+def LSM():
+    x_data = np.array(GraphStuff)
+    y_data = np.array(list(worstTime.values()))
+
+    params, trash = curve_fit(quadratic_model, x_data, y_data)
+
+    a_fit, b_fit, c_fit = params
+    print(f'Коэффициенты уравнения (Средний случай): a = {a_fit}, b = {b_fit}, c = {c_fit}')
+
+    x_fit = np.linspace(min(x_data), max(x_data), 100)
+    y_fit = quadratic_model(x_fit, *params)
+
+    plt.plot(x_fit, y_fit, 'r-', label='Quadratic Fit')
+
 plt.figure(1).set_figwidth(8)
 plt.xlabel('Количество элементов в массиве')
 plt.ylabel('Среднее время выполнения (секунды)')
@@ -74,18 +88,7 @@ plt.grid(False)
 def quadratic_model(x, a, b, c):
     return a * x**2 + b * x + c
 
-x_data = np.array(GraphStuff)
-y_data = np.array(list(worstTime.values()))
-
-params, covariance = curve_fit(quadratic_model, x_data, y_data)
-
-a_fit, b_fit, c_fit = params
-print(f'Коэффициенты уравнения (Средний случай): a = {a_fit}, b = {b_fit}, c = {c_fit}')
-
-x_fit = np.linspace(min(x_data), max(x_data), 100)
-y_fit = quadratic_model(x_fit, *params)
-
-plt.plot(x_fit, y_fit, 'r-', label='Quadratic Fit')
+LSM()
 
 #Case 3
 plt.figure(3).set_figwidth(8)
@@ -99,18 +102,7 @@ for i in range(10, NOD, 10):
 
 plt.scatter(GraphStuff, worstTime.values(), s=5, c='orange')
 
-x_data = np.array(GraphStuff)
-y_data = np.array(list(worstTime.values()))
-
-params, covariance = curve_fit(quadratic_model, x_data, y_data)
-
-a_fit, b_fit, c_fit = params
-print(f'Коэффициенты уравнения (Худший случай): a = {a_fit}, b = {b_fit}, c = {c_fit}')
-
-x_fit = np.linspace(min(x_data), max(x_data), 100)
-y_fit = quadratic_model(x_fit, *params)
-
-plt.plot(x_fit, y_fit, 'r-', label='Quadratic Fit')
+LSM()
 
 plt.tight_layout()
 plt.grid(False)
