@@ -35,6 +35,10 @@ def fillArrWorst(numOfEl):
     for i in range(numOfEl):
         a[i] = 100 - i
 
+
+def quadratic_model(x, a, b, c):
+    return a * x**2 + b * x + c
+
 def LSM():
     x_data = np.array(GraphStuff)
     y_data = np.array(list(worstTime.values()))
@@ -84,9 +88,6 @@ for i in range(10, NOD, 10):
 plt.scatter(GraphStuff, worstTime.values(), s=5, c='orange')
 plt.tight_layout()
 plt.grid(False)
-
-def quadratic_model(x, a, b, c):
-    return a * x**2 + b * x + c
 
 LSM()
 
