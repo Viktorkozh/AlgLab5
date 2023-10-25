@@ -5,12 +5,12 @@ import numpy as np
 import math as m
 from scipy.optimize import curve_fit
 
-NumberOfDots = 100
+number_of_dots = 100
 e, o, mid = 0, 0, 0
-NOD = (NumberOfDots + 10) * 10
+nod = (number_of_dots + 10) * 10
 a = {}
-worstTime = {}
-GraphStuff = [i for i in range(10, NOD, 10)]
+worst_time = {}
+graph_stuff = [i for i in range(10, nod, 10)]
 oarr = []
 earr = []
 something = {}
@@ -26,15 +26,15 @@ def sort(a, n):
             return 0
 
 
-def fillArr(numOfEl):
+def fill_arr(num_of_el):
     a.clear()
-    for i in range(numOfEl):
+    for i in range(num_of_el):
         a[i] = random.randint(0, 100000)
 
 
-def fillArrWorst(numOfEl):
+def fill_arr_worst(num_of_el):
     a.clear()
-    for i in range(numOfEl):
+    for i in range(num_of_el):
         a[i] = 100 - i
 
 
@@ -42,9 +42,9 @@ def quadratic_model(x, a, b, c):
     return a * x**2 + b * x + c
 
 
-def lSM(name):
-    x_data = np.array(GraphStuff)
-    y_data = np.array(list(worstTime.values()))
+def lsm(name):
+    x_data = np.array(graph_stuff)
+    y_data = np.array(list(worst_time.values()))
 
     params, trash = curve_fit(quadratic_model, x_data, y_data)
 
@@ -54,7 +54,7 @@ def lSM(name):
     x_fit = np.linspace(min(x_data), max(x_data), 100)
     y_fit = quadratic_model(x_fit, *params)
 
-    plt.plot(x_fit, y_fit, "r-", label = "Quadratic Fit")
+    plt.plot(x_fit, y_fit, "r-", label="Quadratic Fit")
 
 
 plt.figure(1).set_figwidth(8)
@@ -62,16 +62,16 @@ plt.xlabel("Количество элементов в массиве")
 plt.ylabel("Среднее время выполнения (секунды)")
 plt.title("Зависимость времени сортировки от размера массива\n(Средний случай)")
 
-for i in range(10, NOD, 10):
-    fillArr(i)
+for i in range(10, nod, 10):
+    fill_arr(i)
     mid, e, o = 0, 0, 0
     for j in range(30):
-        worstTime[i] = timeit.timeit(lambda: sort(a, i + 1), number = 1)
-        mid += worstTime[i]
-        e += 1 / 30 * worstTime[i]
-        plt.scatter(i - 1, worstTime[i], s = 2, c = "green")
-        something[j] = worstTime[i]
-    worstTime[i] = mid / 30
+        worst_time[i] = timeit.timeit(lambda: sort(a, i + 1), number=1)
+        mid += worst_time[i]
+        e += 1 / 30 * worst_time[i]
+        plt.scatter(i - 1, worst_time[i], s=2, c="green")
+        something[j] = worst_time[i]
+    worst_time[i] = mid / 30
     for s in something:
         o += 1 / 29 * (something[s] - e) ** 2
     o = m.sqrt(o)
@@ -86,14 +86,14 @@ plt.xlabel("Количество элементов в массиве")
 plt.ylabel("Среднее время выполнения (секунды)")
 plt.title("Зависимость времени сортировки от размера массива\n(Средний случай)")
 
-for i in range(10, NOD, 10):
-    plt.errorbar(i, earr[i // 10 - 1], yerr = oarr[i // 10 - 1], fmt = "none", capsize = 5)
+for i in range(10, nod, 10):
+    plt.errorbar(i, earr[i // 10 - 1], yerr=oarr[i // 10 - 1], fmt="none", capsize=5)
 
-plt.scatter(GraphStuff, worstTime.values(), s=5, c="orange")
+plt.scatter(graph_stuff, worst_time.values(), s=5, c="orange")
 plt.tight_layout()
 plt.grid(False)
 
-lSM("Средний случай")
+lsm("Средний случай")
 
 # Case 3
 plt.figure(3).set_figwidth(8)
@@ -101,13 +101,13 @@ plt.xlabel("Количество элементов в массиве")
 plt.ylabel("Среднее время выполнения (секунды)")
 plt.title("Зависимость времени сортировки от размера массива\n(Худший случай)")
 
-for i in range(10, NOD, 10):
-    fillArrWorst(i)
-    worstTime[i] = timeit.timeit(lambda: sort(a, i + 1), number = 1)
+for i in range(10, nod, 10):
+    fill_arr_worst(i)
+    worst_time[i] = timeit.timeit(lambda: sort(a, i + 1), number=1)
 
-plt.scatter(GraphStuff, worstTime.values(), s = 5, c = "orange")
+plt.scatter(graph_stuff, worst_time.values(), s=5, c="orange")
 
-lSM("Худший случай")
+lsm("Худший случай")
 
 plt.tight_layout()
 plt.grid(False)
