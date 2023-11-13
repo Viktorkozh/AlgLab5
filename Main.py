@@ -59,6 +59,7 @@ def lsm(name):
 
     plt.plot(x_fit, y_fit, "r-", label="Quadratic Fit")
 
+
 if __name__ == '__main__':
     plt.figure(1).set_figwidth(8)
     plt.xlabel("Количество элементов в массиве")
