@@ -1,3 +1,6 @@
+#!/usr/bin/env python3 
+#coding: utf-8 -*-
+
 import timeit
 import random
 import matplotlib.pyplot as plt
@@ -56,60 +59,60 @@ def lsm(name):
 
     plt.plot(x_fit, y_fit, "r-", label="Quadratic Fit")
 
+if __name__ == '__main__':
+    plt.figure(1).set_figwidth(8)
+    plt.xlabel("Количество элементов в массиве")
+    plt.ylabel("Среднее время выполнения (секунды)")
+    plt.title("Зависимость времени сортировки от размера массива\n(Средний случай)")
 
-plt.figure(1).set_figwidth(8)
-plt.xlabel("Количество элементов в массиве")
-plt.ylabel("Среднее время выполнения (секунды)")
-plt.title("Зависимость времени сортировки от размера массива\n(Средний случай)")
+    for i in range(10, nod, 10):
+        fill_arr(i)
+        mid, e, o = 0, 0, 0
+        for j in range(30):
+            worst_time[i] = timeit.timeit(lambda: sort(a, i + 1), number=1)
+            mid += worst_time[i]
+            e += 1 / 30 * worst_time[i]
+            plt.scatter(i - 1, worst_time[i], s=2, c="green")
+            something[j] = worst_time[i]
+        worst_time[i] = mid / 30
+        for s in something:
+            o += 1 / 29 * (something[s] - e) ** 2
+        o = m.sqrt(o)
+        oarr.append(o)
+        earr.append(e)
 
-for i in range(10, nod, 10):
-    fill_arr(i)
-    mid, e, o = 0, 0, 0
-    for j in range(30):
-        worst_time[i] = timeit.timeit(lambda: sort(a, i + 1), number=1)
-        mid += worst_time[i]
-        e += 1 / 30 * worst_time[i]
-        plt.scatter(i - 1, worst_time[i], s=2, c="green")
-        something[j] = worst_time[i]
-    worst_time[i] = mid / 30
-    for s in something:
-        o += 1 / 29 * (something[s] - e) ** 2
-    o = m.sqrt(o)
-    oarr.append(o)
-    earr.append(e)
+    plt.tight_layout()
+    plt.grid(False)
 
-plt.tight_layout()
-plt.grid(False)
+    plt.figure(2).set_figwidth(8)
+    plt.xlabel("Количество элементов в массиве")
+    plt.ylabel("Среднее время выполнения (секунды)")
+    plt.title("Зависимость времени сортировки от размера массива\n(Средний случай)")
 
-plt.figure(2).set_figwidth(8)
-plt.xlabel("Количество элементов в массиве")
-plt.ylabel("Среднее время выполнения (секунды)")
-plt.title("Зависимость времени сортировки от размера массива\n(Средний случай)")
+    for i in range(10, nod, 10):
+        plt.errorbar(i, earr[i // 10 - 1], yerr=oarr[i // 10 - 1], fmt="none", capsize=5)
 
-for i in range(10, nod, 10):
-    plt.errorbar(i, earr[i // 10 - 1], yerr=oarr[i // 10 - 1], fmt="none", capsize=5)
+    plt.scatter(graph_stuff, worst_time.values(), s=5, c="orange")
+    plt.tight_layout()
+    plt.grid(False)
 
-plt.scatter(graph_stuff, worst_time.values(), s=5, c="orange")
-plt.tight_layout()
-plt.grid(False)
+    lsm("Средний случай")
 
-lsm("Средний случай")
+    # Case 3
+    plt.figure(3).set_figwidth(8)
+    plt.xlabel("Количество элементов в массиве")
+    plt.ylabel("Среднее время выполнения (секунды)")
+    plt.title("Зависимость времени сортировки от размера массива\n(Худший случай)")
 
-# Case 3
-plt.figure(3).set_figwidth(8)
-plt.xlabel("Количество элементов в массиве")
-plt.ylabel("Среднее время выполнения (секунды)")
-plt.title("Зависимость времени сортировки от размера массива\n(Худший случай)")
+    for i in range(10, nod, 10):
+       fill_arr_worst(i)
+       worst_time[i] = timeit.timeit(lambda: sort(a, i + 1), number=1)
 
-for i in range(10, nod, 10):
-    fill_arr_worst(i)
-    worst_time[i] = timeit.timeit(lambda: sort(a, i + 1), number=1)
+    plt.scatter(graph_stuff, worst_time.values(), s=5, c="orange")
 
-plt.scatter(graph_stuff, worst_time.values(), s=5, c="orange")
+    lsm("Худший случай")
 
-lsm("Худший случай")
+    plt.tight_layout()
+    plt.grid(False)
 
-plt.tight_layout()
-plt.grid(False)
-
-plt.show()
+    plt.show()
